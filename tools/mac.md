@@ -9,12 +9,28 @@ https://github.com/orbstack/orbstack
 ### 网址
 [macwk](https://macwk.com.cn/)
 
+
+### 命令行
+#### ip
+在linux系统上ip命令很常用，但是在Mac系统上并没有这个命令，我们可以安装 iproute2mac 使用类似ip功能的命令。
+https://github.com/brona/iproute2mac
+
 ### 工具
 
 snipaste
 pastenow
 hapigo/utools /Alfred 5/ Raycast就像是升级版的Spotlight搜索
-
+#### dock
+- ubar
+- ActiveDock 2
+- HyperDock
+- cDock
+- Dragthins
+#### 解压工具
+- keka
+- maczip
+#### 彻底卸载应用
+https://github.com/alienator88/Pearcleaner
 #### 录屏
 https://github.com/lihaoyun6/QuickRecorder
 
@@ -61,3 +77,13 @@ multipass delete vm01
 # 释放实例（彻底删除）
 multipass purge vm01
 ```
+
+#### CrossOver
+类虚拟机-在 macOS 和 Linux 上运行 Windows 应用程序，使用最成熟的游戏转译层Wine
+
+#### 超级右键
+- iRightMouse(功能丰富)
+- New File Menu
+- Easy New File
+- MouseBoost Pro(功能丰富)
+- RClick(免费)
