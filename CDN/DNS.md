@@ -747,3 +747,102 @@ ECS 有一个小缺点，就是不同 subnet 的 DNS 缓存不能共用。这也
 有了 ECS，我们在国内只需要设置IP隧道和IP分流，再也不需要搞DNS解析分流了。
 
 [使用公共 DNS 上网的弊端（二）](https://ephen.me/2017/PublicDns_2/)
+
+### DoT 和 DoH 
+
+DoT 和 DoH都是加密DNS的一种方式，区别在于它们采用不同的协议和端口，两个都是域名解析安全扩展协议的一种。
+概念：
+DoT 全称 DNS over TLS，它使用 TLS 来传输 DNS 协议。
+DoH 全称 DNS over HTTPS，它使用 HTTPS 来传输 DNS 协议。
+两个协议原理是相同的，都是通过加密传输用户和 DNS 服务器之间的 DNS 消息，起到防止中间用户窃听和域名查询隐私泄漏的作用。相对来说 DoH 更通用一些。
+
+> Edge 和 Chrome 浏览器设置 DoH 的方法: 隐私设置和安全性 -> 安全 -> 使用安全 DNS - > 下拉框里选择自定义，然后在下面 文本框 中输入自己找到的 DoH 服务器。
+> https://dns.alidns.com/dns-query
+> https://223.5.5.5/dns-query
+
+coredns可以通过[TLS插件](https://coredns.io/plugins/tls/)进行支持
+```
+Start a DNS-over-TLS server that picks up incoming DNS-over-TLS queries on port 5553 and uses the nameservers defined in /etc/resolv.conf to resolve the query. This proxy path uses plain old DNS.
+tls://.:5553 {
+	tls cert.pem key.pem ca.pem
+	forward . /etc/resolv.conf
+}
+
+Start a DNS-over-gRPC server that is similar to the previous example, but using DNS-over-gRPC for incoming queries.
+grpc://. {
+	tls cert.pem key.pem ca.pem
+	forward . /etc/resolv.conf
+}
+
+Start a DoH server on port 443 that is similar to the previous example, but using DoH for incoming queries.
+https://. {
+	tls cert.pem key.pem ca.pem
+	forward . /etc/resolv.conf
+}
+```
+> tls 插件让 CoreDNS 监听 853 端口（默认 DoT 端口），并使用你指定的证书和私钥。
+> DoH使用443端口
+
+#### DoQ
+[RFC 9250](https://datatracker.ietf.org/doc/rfc9250)
+
+DNS-over-QUIC（DoQ）：DoQ是一种新兴的安全协议，通过QUIC传输协议发送DNS查询和响应。QUIC结合了TCP和UDP的特点，同时还集成了类似于TLS的内置加密
+#### DoT
+[RFC 7858](https://datatracker.ietf.org/doc/rfc7858)
+
+#### DoH
+[RFC 8484](https://datatracker.ietf.org/doc/rfc8484)
+
+开发者使用DoH服务
+```
+package main
+
+import (
+        "encoding/base64"
+        "fmt"
+        "github.com/miekg/dns"
+        "io/ioutil"
+        "net/http"
+        "os"
+)
+
+func main() {
+       query := dns.Msg{}
+       query.SetQuestion("www.taobao.com.", dns.TypeA)
+       msg, _ := query.Pack()
+       b64 := base64.RawURLEncoding.EncodeToString(msg)
+       resp, err := http.Get("https://5***4-2h*****ynx3tls.alidns.com/dns-query?dns=" + b64)
+       if err != nil {
+            fmt.Printf("Send query error, err:%v\n", err)
+            os.Exit(1)
+       }
+       defer resp.Body.Close()
+       bodyBytes, _ := ioutil.ReadAll(resp.Body)
+       response := dns.Msg{}
+       response.Unpack(bodyBytes)
+       fmt.Printf("Dns answer is :%v\n", response.String())
+}
+```
+运行结果如下：
+```
+Sent Get query https://dns.alidns.com/dns-query?dns=xzEBAAABAAAAAAAAA3d3dwZ0YW9iYW8DY29tAAABAAE
+Dns answer is :;; opcode: QUERY, status: NOERROR, id: 5***3
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;www.taobao.com.        IN       A
+
+;; ANSWER SECTION:
+www.taobao.com. 15      IN      CNAME   www.taobao.com.danuoyi.tbcache.com.
+www.taobao.com.danuoyi.tbcache.com.     15      IN      A       221.229.XXX.XXX
+www.taobao.com.danuoyi.tbcache.com.     15      IN      A       221.229.XXX.XXX
+
+;; ADDITIONAL SECTION:
+
+;; OPT PSEUDOSECTION:
+; EDNS: version 0; flags: ; udp: 4096
+```
+
+### 其它
+
+[免费公共 DNS 服务器大全](https://dns.icoa.cn/#china)
