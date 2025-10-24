@@ -21,14 +21,55 @@ Nginx通过hash解决了cache抖动的问题，Varnish的内存缓存非常的�
 [varnish / squid / nginx cache 有什么不同](https://www.zhihu.com/question/20143441)
 
 ## 调度算法
-动态规划: 
+### 动态规划: 
 线性规划: https://scipopt.org/doc/html/
+[SCIP](https://scipopt.org/doc/html/)
+
+[COIN-OR CBC](https://github.com/coin-or/Cbc)（Coin-or Branch and Cut）是一个开源的混合整数线性规划（MILP）求解器
 
 Google OR-Tools专门用于解决各种优化问题，包括MIP（混合整数规划）
 https://github.com/google/or-tools.git
 https://github.com/google/or-tools/tree/stable/ortools/linear_solver
 
-mcmf
+
+https://github.com/gonzojive/or-tools-go
+absl and or-tools:
+https://github.com/abseil/abseil-cpp.git
+https://github.com/google/or-tools.git
+
+其他MIP求解器
+
+开源的
+[GLPK](https://www.gnu.org/software/glpk/)（仅限 Linux 和 MacOS）
+[COIN-OR CBC](https://github.com/coin-or/Cbc)（Coin-or Branch and Cut）是一个开源的混合整数线性规划（MILP）求解器
+[SCIP](https://scipopt.org/doc/html/)
+[HiGHS](https://github.com/ERGO-Code/HiGHS)
+
+商业的
+Gurobi
+[CPLEX](https://www.ibm.com/cn-zh/products/ilog-cplex-optimization-studio/cplex-optimizer)
+[XPRESS](https://www.fico.com/en/products/fico-xpress-optimization) 求解器
+
+
+
+求解速度（大致排序）
+Gurobi - 最快
+CPLEX - 很快
+Xpress - 快
+HiGHS - 较快
+SCIP - 中等
+CBC - 较慢
+GLPK - 最慢
+
+内存使用
+GLPK - 最少
+CBC - 较少
+HiGHS - 中等
+SCIP - 较多
+Gurobi/CPLEX - 最多
+
+
+### mcmf
 最小费用最大流（Minimum Cost Maximum Flow）
 
 ## DNS
