@@ -220,6 +220,10 @@ clash 需要自建节点(或购买机场) 安装V2Ray/Trojan服务端
 https://dog.ssrdog.com/
 https://mojie.app
 
+> 小火箭共享账号: https://github.com/Bear-biscuit/ID_SharedWeb
+> https://id.bocchi.vip/
+> https://aunlock.laomaos.com/share/UnDjXSBtqh  (分享码:112233)
+
 **Clash**：
 多协议支持： Clash 支持多种代理协议，如 Shadowsocks、Vmess、Trojan 等，这意味着您可以根据不同的使用场景和需求来选择合适的协议。
 灵活的配置： Clash 提供强大的配置选项，允许用户自定义代理规则，以实现更精细的流量控制和路由设置。
